@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Router and Components with Shadow DOM</title>
+</head>
+<body>
+
+<div id="app"></div>
+
+<style>
+  html,
+  body {
+    display: flex;
+  }
+  html, body, div, ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<script>
+// Header Component
+class HeaderComponent extends HTMLElement {
+  constructor() {
+    super();
+    const shadow = this.attachShadow({ mode: 'open' });
+    const header = document.createElement('div');
+    header.setAttribute('part', 'my-part');
+
+    const style = document.createElement('style');
+    style.textContent = `
+      ul {
+        width: 200px;
+        height: 1400px;
+        border: rgba(0,0,0, 0.2) solid 1px;
+        margin: 0;
+        padding; 0;
+      }
+      li {
+        list-style: none;
+        color: green;
+      }
+      a {
+        color: black;
+        text-decoration: none;
+        line-height: 30px;
+      }
+    `;
+    // Header Menu List
+    const headerList = document.createElement('ul');
+
+    const homeItem = document.createElement('li');
+    const homeLink = document.createElement('a');
+    homeLink.href = '/';
+    homeLink.textContent = 'Home';
+    homeLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      router.navigate('/');
+    });
+    homeItem.appendChild(homeLink);
+    headerList.appendChild(homeItem);
+
+    const aboutItem = document.createElement('li');
+    const aboutLink = document.createElement('a');
+    aboutLink.href = '/about';
+    aboutLink.textContent = 'About';
+    aboutLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      router.navigate('/about');
+    });
+    aboutItem.appendChild(aboutLink);
+    headerList.appendChild(aboutItem);
+
+    header.appendChild(headerList);
+    shadow.appendChild(style);
+    shadow.appendChild(header);
+  }
+}
+
+// Home Component
+class HomeComponent extends HTMLElement {
+  constructor() {
+    super();
+    const SHADOW = this.attachShadow({ mode: 'open' });
+
+    const CONTENT = document.createElement('h1');
+    CONTENT.innerHTML = '사용자의 편의를 위한 서비스를 개발을 하고 싶은<br/> 프론트엔드 개발자 김동원 입니다.';
+    // Add Element Button
+    const ADD_BUTTON = document.createElement('button');
+    const style = document.createElement('style');
+    function create_list(){
+      let doc = ["list", "list2"];
+      let arr = [];
+      for (let i=0; i < doc.length; i++){
+        arr.push(doc.lnegth);
+      }
+      return arr;
+    }
+    const TEST = [];
+    TEST.textContent = create_list ; 
+    
+    style.textContent = `
+     div {
+      width: 1920px;
+      height: 1020px;
+     }
+
+      h1 {
+        color: green;
+     }  
+    `;
+    // 클릭 이벤트 엘리먼트 추가하기
+    ADD_BUTTON.textContent = 'Add Element';
+    ADD_BUTTON.addEventListener('click', () => {
+      this.addNewElement("HelloWorld");
+    });
+    // PROFILE
+    const PROFILE = document.createElement('div');
+    // PROFILE.textContent = PROFILE_SECTION;
+    function App(){
+      return "Hello World";
+    }
+    // PROFILE.textContent = App;
+    PROFILE.textContent = App(); 
+    SHADOW.appendChild(style);
+    SHADOW.appendChild(CONTENT);
+    SHADOW.appendChild(ADD_BUTTON);
+    SHADOW.appendChild(PROFILE);
+
+    // const TEST_ELEMENT = documnet.createElement('div');
+    // TEST_ELEMENT = TEST;
+    // console.log(TEST_ELEMENT);
+     
+    // function Web_Element(){
+    //   const TEST = "Hello_World";
+    //   return TEST;
+    // }
+    // const a = documnet.creatElement("div");
+    // a.textContent = "Hello World";
+    // function Title(){
+    //   const CONTACT = "CONTACT";
+    //   this.SHADOW.appendChild(CONTANT);
+    // }
+  }
+  // addNewElement() {
+  //   const NEW_ELEMENT = document.createElement('div');
+  //   NEW_ELEMENT.textContent = 'New Element';
+  //   this.shadowRoot.appendChild(newElement);
+  // }
+}
+// Component 2
+class AboutComponent extends HTMLElement {
+  constructor() {
+    super();
+
+    const shadow = this.attachShadow({ mode: 'open' });
+
+    const content = document.createElement('div');
+    content.textContent = 'About Component';
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add Element';
+    addButton.addEventListener('click', () => {
+      this.addNewElement();
+    });
+    const ul = document.createElement('ul');
+    const li = document.createElement('li');
+    var swiper_value = ["First", "Second"];
+    var arr = [];
+    for(let i=0; i < swiper_value.length; i++){
+      arr.push(swiper_value[i])
+    }
+    li.textContent = arr;
+    shadow.appendChild(content);
+    shadow.appendChild(addButton);
+    shadow.appendChild(li);
+  }
+
+  addNewElement() {
+    const newElement = document.createElement('div');
+    newElement.textContent = 'New Element';
+    this.shadowRoot.appendChild(newElement);
+  }
+}
+
+// Router
+class Router {
+  constructor() {
+    this.routes = {};
+  }
+
+  addRoute(path, component) {
+    this.routes[path] = component;
+  }
+
+  navigate(path) {
+    const component = this.routes[path];
+
+    if (component) {
+      this.renderComponent(component);
+      // Update the URL without triggering a page reload
+      history.pushState({}, '', path);
+    } else {
+      this.renderComponent(NotFoundComponent);
+    }
+  }
+
+  renderComponent(component) {
+    const appElement = document.getElementById('app');
+    appElement.innerHTML = '';
+    appElement.appendChild(new component());
+  }
+}
+
+// NotFoundComponent
+class NotFoundComponent extends HTMLElement {
+  constructor() {
+    super();
+
+    const shadow = this.attachShadow({ mode: 'open' });
+
+    const content = document.createElement('div');
+    content.textContent = '404 Not Found';
+
+    shadow.appendChild(content);
+  }
+}
+
+// Initialize components
+customElements.define('header-component', HeaderComponent);
+customElements.define('home-component', HomeComponent);
+customElements.define('about-component', AboutComponent);
+
+// Initialize router
+const router = new Router();
+router.addRoute('/', HomeComponent);
+router.addRoute('/about', AboutComponent);
+
+// Initial route
+router.navigate('/');
+
+// Render header on every page
+const headerElement = new HeaderComponent();
+document.body.prepend(headerElement);
+
+document.addEventListener('click', (event) => {
+  if (event.target.tagName === 'A') {
+    event.preventDefault();
+    const path = event.taret.getAttribute('href');
+    router.navigate(path);
+  }
+});
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', () => {
+  const path = window.location.pathname;
+  router.navigate(path);
+});// Navigation
+document.addEventListener('click', (event) => {
+  if (event.target.tagName === 'A') {
+    event.preventDefault();
+    const path = event.target.getAttribute('href');
+    router.navigate(path);
+  }
+});
+</script>
+
+</body>
+</html>
