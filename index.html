@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Router and Components with Shadow DOM</title>
+  <title>안녕하세요. 프론트엔드 개발자 김동원 입니다.</title>
 </head>
 <body>
 
@@ -104,12 +104,16 @@ class HomeComponent extends HTMLElement {
     style.textContent = `
      div {
       width: 1920px;
-      height: 1020px;
+      // height: 1020px;
      }
 
       h1 {
         color: green;
      }  
+     div {
+      color: green;
+      font-size: 20px;
+     }
     `;
     // 클릭 이벤트 엘리먼트 추가하기
     ADD_BUTTON.textContent = 'Add Element';
@@ -123,11 +127,43 @@ class HomeComponent extends HTMLElement {
       return "Hello World";
     }
     // PROFILE.textContent = App;
+    const CONTACT = document.createElement('div');
+    CONTACT.textContent = "CONTACT";
     PROFILE.textContent = App(); 
+    const profile_list = 
+    [
+      {id:0, gg:"canyon920@gmail.com"},
+      {id:1, gg: "010-2623-3000"},
+      {id:2, gg: "https://velog.io/@canyon920"},
+      {id:3, gg: "https://github.com/canyon920"}
+    ];
+
+    let profile_key = [];
+    const profile_value = document.createElement('div');
+    
+    // for (let i =0; i < profile_list.length; i++){
+    //   profile_key.push(profile_list.email[i])
+    // }
+
+// Assuming SHADOW is a reference to your shadow DOM element
+
+    profile_list.forEach(item => {
+        // Create elements based on the keys you want (id and gg in this case)
+        let idElement = document.createElement('div');
+        idElement.textContent = `ID: ${item.id}`;
+        
+        let ggElement = document.createElement('div');
+        ggElement.textContent = `GG: ${item.gg}`;
+        
+        // Append the elements to your shadow DOM
+        SHADOW.appendChild(idElement);
+        SHADOW.appendChild(ggElement);
+    });
+    profile_value.textContent = profile_key;
     SHADOW.appendChild(style);
     SHADOW.appendChild(CONTENT);
     SHADOW.appendChild(ADD_BUTTON);
-    SHADOW.appendChild(PROFILE);
+    SHADOW.appendChild(CONTACT);
 
     // const TEST_ELEMENT = documnet.createElement('div');
     // TEST_ELEMENT = TEST;

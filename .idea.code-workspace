@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../backend"
+		},
+		{
+			"path": "../../../../canyon"
+		},
+		{
+			"path": "../../../../frontend"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": ".idea"
+	}
+}
